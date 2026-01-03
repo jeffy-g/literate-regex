@@ -38,4 +38,4 @@ const compilePCREStyleRegExpLiteral = (src) => {
     return new RegExp(pattern, flags);
 };
 exports.compilePCREStyleRegExpLiteral = compilePCREStyleRegExpLiteral;
-exports.version = "v0.5.0";
+exports.version = "v0.6.0";

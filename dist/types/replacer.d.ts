@@ -51,7 +51,10 @@ export type StringReplacerParams<
   input: string,
   groups: NamedGroups
 ];
-export type StringReplacerFunction<R> =
+/**
+ * string replacer is function or string
+ */
+export type StringReplacerType<R> =
   R extends TypedRegExp<infer P extends string, infer F extends string>
     ? (...args: StringReplacerParams<TypedRegExp<P, F>, P>) => string
     : R extends RegExp

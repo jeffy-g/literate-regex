@@ -23,7 +23,7 @@ import type {
   RegExpExecArrayFixedPretty,
 } from "./captures.d.ts";
 import type { RegExpFlags, HasStrictRegExpFlag } from "./regex-util.d.ts";
-import type { StringReplacerFunction } from "./replacer.d.ts";
+import type { StringReplacerType } from "./replacer.d.ts";
 declare const __typedRegExpBrand: unique symbol;
 /**
  * DO NOT USE CONSUMER
@@ -43,11 +43,11 @@ export type TypedRegExpTypes<
   IsTypedRegExp = R extends TypedRegExpBrand ? true : false,
   GROUPS = true extends IsTypedRegExp ? NamedGroups : never,
   EXEC = true extends IsTypedRegExp ? RegExpExecArrayFixedPretty<R, S, GroupCount, NamedGroups> : never,
-  REPLACER = true extends IsTypedRegExp ? StringReplacerFunction<R> : never,
+  REPLACER = true extends IsTypedRegExp ? StringReplacerType<R> : never,
   INDICES = true extends IsTypedRegExp ? RegExpIndicesArray<GroupCount, NamedGroups> : never,
 > = true extends IsTypedRegExp ? {
   groups: GROUPS;
-  exec: EXEC;
+  exec: EXEC | null;
   replacer: REPLACER;
   indices: HasStrictRegExpFlag<RegExpFlags<R>, "d"> extends true ? INDICES : never;
 } : never;
