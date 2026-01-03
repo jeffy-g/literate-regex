@@ -1,6 +1,6 @@
 {
   "name": "literate-regex",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Write readable (literate) regex sources with # comments, then normalize them to JS RegExp.source at the type level.",
   "license": "Apache-2.0",
   "sideEffects": false,
@@ -16,6 +16,15 @@
     "./global": {
       "types": "./dist/global.d.ts"
     }
+  },
+  "author": "jeffy-g",
+  "bugs": {
+    "url": "https://github.com/jeffy-g/literate-regex/issues"
+  },
+  "homepage": "https://github.com/jeffy-g/literate-regex#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeffy-g/literate-regex.git"
   },
   "files": [
     "README.md",
