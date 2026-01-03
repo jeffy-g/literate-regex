@@ -3,7 +3,6 @@
 ![npm bundle size](https://img.shields.io/bundlephobia/min/literate-regex?style=plastic)
 ![npm](https://img.shields.io/npm/dm/literate-regex.svg?style=plastic)
 ![npms.io](https://img.shields.io/npms-io/maintenance-score/literate-regex)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/jeffy-g/literate-regex)
 
 # literate-regex
 
