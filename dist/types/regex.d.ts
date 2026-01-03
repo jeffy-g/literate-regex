@@ -60,6 +60,14 @@ export type TypedRegExp<P extends string, F extends string = ""> = RegExp & {
   readonly flags: F;
 } & TypedRegExpBrand & {
   types: TypedRegExpTypes<TypedRegExp<P, F>>;
+  global: HasStrictRegExpFlag<F, "g">;
+  dotAll: HasStrictRegExpFlag<F, "s">;
+  hasIndices: HasStrictRegExpFlag<F, "d">;
+  ignoreCase: HasStrictRegExpFlag<F, "i">;
+  multiline: HasStrictRegExpFlag<F, "m">;
+  sticky: HasStrictRegExpFlag<F, "y">;
+  unicode: HasStrictRegExpFlag<F, "u">;
+  unicodeSets: HasStrictRegExpFlag<F, "v">;
 };
 /**
  * Extracts the literal type from the source property of a RegExp.

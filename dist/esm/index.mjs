@@ -32,4 +32,4 @@ export const compilePCREStyleRegExpLiteral = (src) => {
     const { pattern, flags } = extractJsRegexPartsFromPCREStyleRegExpLiteral(src);
     return new RegExp(pattern, flags);
 };
-export const version = "v0.6.0";
+export const version = "v0.6.2";

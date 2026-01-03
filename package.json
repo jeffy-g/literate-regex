@@ -1,6 +1,6 @@
 {
   "name": "literate-regex",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Write readable (literate) regex sources with # comments, then normalize them to JS RegExp.source at the type level.",
   "license": "Apache-2.0",
   "sideEffects": false,
