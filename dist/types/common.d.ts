@@ -16,12 +16,34 @@
 /**
  * @file types/common.d.ts
  */
+/**
+ * Combines an intersection of object types into a single object type.
+ * 
+ * @template IS The intersection of object types to combine.
+ * @returns {Record<string, unknown>} A single object type with all properties from the intersection.
+ * 
+ * @example
+ * type Combined = CombineIntersection<{ a: string } & { b: number }>;
+ * // Result: { a: string; b: number }
+ */
+export type CombineIntersection<IS> =
+  true extends 0 ? { [K in keyof IS]: IS[K] } : { [K in keyof IS]: IS[K] };
+/**
+ * Creates a tuple type of a specified length, with all elements being of a given type.
+ * @template Count - The desired length of the tuple.
+ * @template ArrayType - The type of each element in the tuple.
+ */
 export type TupleOf<
   Count extends number, ArrayType,
   Result extends ArrayType[] = []
 > = Result["length"] extends Count
   ? Result
   : TupleOf<Count, ArrayType, [...Result, ArrayType]>;
+/**
+ * Checks if a given type `T` represents an empty record or `undefined`.
+ * @template T - The type to check.
+ * @returns `true` if `T` is `undefined` or has no keys, otherwise `false`.
+ */
 export type IsEmptyRecord<T> =
   [T] extends [undefined] ? true :
   [keyof T] extends [never] ? true : false;

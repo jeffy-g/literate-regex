@@ -24,9 +24,25 @@ import type { PCREStyleToJsRegExpSource } from "./pcre.d.ts";
 //                    Parse PCRE Style Regex Literal
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
+/**
+ * Represents the complete set of valid JavaScript regular expression flags.  
+ * This type is a string literal containing all possible flags: `d`, `g`, `i`, `m`, `s`, `u`, `v`, `y`.
+ */
 export type TRegexpFlag = "dgimsuvy";
+/**
+ * Represents a union of individual valid JavaScript regular expression flags,  
+ * including an empty string for cases where no flag is present.
+ */
 export type TValidRegExpFlag = StringToUnion<TRegexpFlag> | "";
-type StripFlagsFromEnd<S extends string, Acc extends string = ""> =
+/** 
+ * Recursively strips valid RegExp flags from the end of a string literal. 
+ * This type is designed to avoid TypeScript's backtracking limitations by processing one character at a time. 
+ * 
+ * @template S - The input string literal from which to strip flags. 
+ * @template Acc - An accumulator for the stripped flags, built in reverse order. 
+ * @internal
+ */
+export type StripFlagsFromEnd<S extends string, Acc extends string = ""> =
   S extends `${infer Rest}y` ? StripFlagsFromEnd<Rest, `y${Acc}`> :
   S extends `${infer Rest}v` ? StripFlagsFromEnd<Rest, `v${Acc}`> :
   S extends `${infer Rest}u` ? StripFlagsFromEnd<Rest, `u${Acc}`> :
@@ -35,6 +51,12 @@ type StripFlagsFromEnd<S extends string, Acc extends string = ""> =
   S extends `${infer Rest}i` ? StripFlagsFromEnd<Rest, `i${Acc}`> :
   S extends `${infer Rest}g` ? StripFlagsFromEnd<Rest, `g${Acc}`> :
   S extends `${infer Rest}d` ? StripFlagsFromEnd<Rest, `d${Acc}`> : { body: S; flags: Acc };
+/** 
+ * Extracts the pattern and flags from a JavaScript-style regular expression literal string (e.g., `/pattern/flags`). 
+ * 
+ * @template L - The RegExp literal string. 
+ * @returns An object type with `pattern` and `flags` properties. 
+ */
 export type RegExpLiteralParts<L extends string> =
   StripFlagsFromEnd<L> extends { body: infer B extends string; flags: infer F extends string }
     ? B extends `/${infer AfterStart}`
@@ -43,9 +65,32 @@ export type RegExpLiteralParts<L extends string> =
         : never
       : never
     : never;
+/** 
+ * Extracts the pattern and flags from a PCRE-style regular expression literal string, 
+ * after it has been normalized to a JavaScript-style literal. 
+ * 
+ * @template S - The PCRE-style RegExp literal string. 
+ * @returns An object type with `pattern` and `flags` properties. 
+ */
 export type PCREStyleRegExpParts<S extends string> = RegExpLiteralParts<PCREStyleToJsRegExpSource<S>>;
+/** 
+ * Extracts the pattern string from a PCRE-style regular expression literal. 
+ * 
+ * @template S - The PCRE-style RegExp literal string. 
+ */
 export type PCREStyleRegExpPattern<S extends string> = PCREStyleRegExpParts<S>["pattern"];
+/** 
+ * Extracts the flags string from a PCRE-style regular expression literal. 
+ * 
+ * @template S - The PCRE-style RegExp literal string. 
+ */
 export type PCREStyleRegExpFlags<S extends string> = PCREStyleRegExpParts<S>["flags"];
+/** 
+ * Extracts the pattern and flags from a PCRE-style regular expression literal string at runtime. 
+ * 
+ * @template S - The PCRE-style RegExp literal string. 
+ * @param src - The PCRE-style regular expression literal string. 
+ */
 export declare const extractJsRegexPartsFromPCREStyleRegExpLiteral: <const S extends string>(src: S) => PCREStyleRegExpParts<S>;
 export declare const compilePCREStyleRegExpLiteral: <
   const S extends string,

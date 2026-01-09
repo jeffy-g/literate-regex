@@ -20,9 +20,9 @@ import type {
   TupleOf,
   IsEmptyRecord,
 } from "./common.d.ts";
-import type { RegExpSource } from "./regex.d.ts";
 import type {
   RegExpFlags,
+  RegExpSource,
   HasStrictRegExpFlag,
 } from "./regex-util.d.ts";
 /*!
@@ -30,7 +30,10 @@ import type {
 //                            Named Capture Groups
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
-type FirstChar<S extends string> = S extends `${infer F}${infer _}` ? F : never;
+/**
+ * @internal
+ */
+export type FirstChar<S extends string> = S extends `${infer F}${infer _}` ? F : never;
 /**
  * Recursively extracts parts that match the format (?<GroupName>...) from a string pattern,
  * without considering nesting, and unions them.
@@ -131,17 +134,17 @@ export type CaptureOptTuple<N extends number, T = string | undefined> =
 /**
  * @internal
  */
-type TIndicesItem = [index: number, lastIndex: number];
+export type TIndicesItem = [index: number, lastIndex: number];
 /**
  * @internal
  */
-type RegExpIndicesGroups<NamedGroups> = IsEmptyRecord<NamedGroups> extends true
+export type RegExpIndicesGroups<NamedGroups> = IsEmptyRecord<NamedGroups> extends true
   ? undefined
   : { [P in keyof NamedGroups & string]: TIndicesItem | undefined };
 /**
  * @internal
  */
-type RegExpIndicesTuple<GroupCount extends number> = [
+export type RegExpIndicesTuple<GroupCount extends number> = [
   match: TIndicesItem,
   ...BuildCaptureTuple<GroupCount, TIndicesItem | undefined>
 ];
@@ -183,6 +186,11 @@ export type RegExpExecArrayFixed<
   GroupCount extends number = CountCaptureGroups<S>,
   NamedGroups = RegExpNamedGroups<R>
 > = RegExpExecArrayFixedBase<R, GroupCount, NamedGroups>;
+/**
+ * Represents a fixed version of RegExpExecArray that includes the matched string,  
+ * captures (with named parameters for better readability), and optionally named groups.
+ * @template R - A RegExp type.
+ */
 export type RegExpExecArrayFixedPretty<
   R extends RegExp,
   S extends RegExpSource<R> = RegExpSource<R>,

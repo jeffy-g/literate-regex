@@ -19,6 +19,7 @@
  */
 export * from "./types/common";
 export * from "./types/regex";
+export * from "./types/regex-util";
 export * from "./types/pcre";
 export * from "./types/captures";
 export * from "./types/parser";

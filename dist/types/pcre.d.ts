@@ -48,12 +48,13 @@
 /**
  * Union of whitespace characters used by this library.
  * 
- * + A set aligned with ECMAScript RegExp **`\s`** (WhiteSpace ∪ LineTerminator)
+ * + A set aligned with ECMAScript RegExp **`\s`** (__WhiteSpace ∪ LineTerminator__)
  * 
  * The union is used to normalize "PCRE-style" regex sources at the type level.
+ * 
  * @internal
  */
-type TWhiteSpace =
+export type TWhiteSpace =
   | "\x09"
   | "\x0A"
   | "\x0B"
@@ -76,6 +77,18 @@ type TWhiteSpace =
   | "\u2028" | "\u2029"
   | "\u202F" | "\u205F" | "\u3000"
   | "\uFEFF";
+/**
+ * A looser definition of whitespace characters compared to {@link TWhiteSpace}.  
+ * This type is used internally for certain normalization processes where a more restricted set of whitespace is considered.
+ * @internal
+ */
+export type TWhiteSpaceLoose =
+  | "\x09"
+  | "\x0A"
+  | "\x0B"
+  | "\x0C"
+  | "\x0D"
+  | "\x20"
 /**
  * Normalize newline sequences for line-based parsing.
  * 
@@ -115,17 +128,17 @@ type NormalizeNewlines<S extends string> =
  * - Handle `\\#` (a literal backslash + literal #) more strictly.
  * - Do not treat `#` as a comment starter inside character classes (`[...]`).
  */
-type StripLine<S extends string, Acc extends string = ""> =
+type StripLine<S extends string, WS extends TWhiteSpace = TWhiteSpace, Acc extends string = ""> =
   S extends `\\#${infer Rest}`
-    ? StripLine<Rest, `${Acc}#`>
+    ? StripLine<Rest, WS, `${Acc}#`>
     : S extends `\\${infer C}${infer Rest}`
-      ? StripLine<Rest, `${Acc}\\${C}`>
+      ? StripLine<Rest, WS, `${Acc}\\${C}`>
       : S extends `#${string}`
         ? Acc
         : S extends `${infer C}${infer Rest}`
-          ? C extends TWhiteSpace
-            ? StripLine<Rest, Acc>
-            : StripLine<Rest, `${Acc}${C}`>
+          ? C extends WS
+            ? StripLine<Rest, WS, Acc>
+            : StripLine<Rest, WS, `${Acc}${C}`>
           : Acc;
 /**
  * Convert a multi-line PCRE-style regex source into a compact JS `RegExp.source`.
@@ -150,11 +163,18 @@ type StripLine<S extends string, Acc extends string = ""> =
  */
 export type PCREStyleToJsRegExpSource<
   Input extends string,
+  WS extends string = TWhiteSpace,
   Acc extends string = "",
   S extends string = NormalizeNewlines<Input>,
 > =
   S extends `${infer Line}\n${infer Rest}`
-    ? PCREStyleToJsRegExpSource<Input, `${Acc}${StripLine<Line>}`, Rest>
+    ? PCREStyleToJsRegExpSource<Input, WS, `${Acc}${StripLine<Line>}`, Rest>
     : `${Acc}${StripLine<S>}`;
+/**
+ * Normalizes a PCRE-style regular expression source string by removing comments and whitespace.  
+ * This function is intended for use at runtime.
+ *
+ * @param src The PCRE-style regular expression source string.
+ */
 export declare const normalizePCREStyleSource: <const S extends string>(src: S) => PCREStyleToJsRegExpSource<S>;
 export {};

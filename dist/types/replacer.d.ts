@@ -16,10 +16,8 @@
 /**
  * @file types/replacer.d.ts
  */
-import type {
-  TypedRegExp,
-  RegExpSource,
-} from "./regex.d.ts";
+import type { TypedRegExp } from "./regex.d.ts";
+import type { RegExpSource } from "./regex-util.d.ts";
 import type { IsEmptyRecord } from "./common.d.ts";
 import type { CountCaptureGroups, RegExpNamedGroups, CaptureOptTuple } from "./captures.d.ts";
 /*!
@@ -27,6 +25,31 @@ import type { CountCaptureGroups, RegExpNamedGroups, CaptureOptTuple } from "./c
 //                          Helper Types for Replacer
 // ============================================================================
 */
+/**
+ * Represents the rest parameters for the `String.prototype.replace()` replacer function,  
+ * excluding the `match` parameter.
+ *
+ * @template R - The `RegExp` type.
+ * @template S - The source string of the `RegExp`.
+ * @template GroupCount - The number of capture groups in the `RegExp`.
+ * @template NamedGroups - The type of named capture groups in the `RegExp`.
+ * @returns A tuple type representing the rest parameters of the replacer function.
+ */
+export type StringReplacerRestArgs<
+  R extends RegExp,
+  S extends RegExpSource<R> = RegExpSource<R>,
+  GroupCount extends number = CountCaptureGroups<S>,
+  NamedGroups = RegExpNamedGroups<R>
+> = IsEmptyRecord<NamedGroups> extends true ? [
+  ...captures: CaptureOptTuple<GroupCount>,
+  offset: number,
+  input: string,
+] : [
+  ...captures: CaptureOptTuple<GroupCount>,
+  offset: number,
+  input: string,
+  groups: NamedGroups
+];
 /**
  * Creates the parameter types for String.replace callback function.
  * 
@@ -39,25 +62,26 @@ export type StringReplacerParams<
   S extends RegExpSource<R> = RegExpSource<R>,
   GroupCount extends number = CountCaptureGroups<S>,
   NamedGroups = RegExpNamedGroups<R>
-> = IsEmptyRecord<NamedGroups> extends true ? [
-  match: string,
-  ...captures: CaptureOptTuple<GroupCount>,
-  offset: number,
-  input: string,
-] : [
-  match: string,
-  ...captures: CaptureOptTuple<GroupCount>,
-  offset: number,
-  input: string,
-  groups: NamedGroups
+> = [
+  /** The matched substring. */
+  matched: string,
+  /**
+   * The rest parameters of the replacer function, including captures, offset, input string, and optionally named groups.
+   */
+  ...StringReplacerRestArgs<R, S, GroupCount, NamedGroups>
 ];
 /**
- * string replacer is function or string
+ * Represents the type of the replacer function used in `String.prototype.replace()`.
+ *
+ * This type is designed to provide precise type inference for the replacer function's parameters,
+ * including `match`, capture groups (both indexed and named), `offset`, `input`, and `groups`.
+ *
+ * @template R - The `RegExp` type for which the replacer function is being defined.
  */
-export type StringReplacerType<R> =
+export type StringReplacerType<R extends RegExp> =
   R extends TypedRegExp<infer P extends string, infer F extends string>
-    ? (...args: StringReplacerParams<TypedRegExp<P, F>, P>) => string
+    ? (...args: StringReplacerParams<R>) => string
     : R extends RegExp
-      ? (match: string, ...rest: any[]) => string
+      ? (match: string, ...restArgs: any[]) => string
       : string;
 export {};

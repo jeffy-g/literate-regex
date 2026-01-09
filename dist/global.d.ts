@@ -18,6 +18,7 @@
  */
 import type {
   TypedRegExp,
+  TypedRegExpCore,
   StringReplacerType,
   RegExpExecArrayFixedPretty,
 } from "./index.d.ts";
@@ -31,7 +32,7 @@ declare global {
      * @param {string} str The String object or string literal on which to perform the search.
      * @returns {RegExpExecArrayFixedPretty< this > | null} An array of results or null if no match is found.
      */
-    exec<const P extends string, const F extends string = "", This extends RegExp = TypedRegExp<P, F>>(this: This, str: string): RegExpExecArrayFixedPretty< This > | null;
+    exec<const P extends string, const F extends string = "", This extends RegExp = TypedRegExpCore<P, F>>(this: This, str: string): RegExpExecArrayFixedPretty< This > | null;
   }
   interface String {
     /**
@@ -40,7 +41,7 @@ declare global {
      * @param searchValue A regular expression object.
      * @param replaceValue A string or a function to create the new substring.
      */
-    replace<SV extends RegExp | string>(this: string, searchValue: SV, replaceValue: StringReplacerType<SV>): string;
+    replace<SV extends RegExp>(this: string, searchValue: SV, replaceValue: StringReplacerType<SV>): string;
   }
   interface RegExpConstructor {
     /**

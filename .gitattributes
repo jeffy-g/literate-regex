@@ -1,5 +1,5 @@
+dist/ linguist-vendored=false
 dist/*.ts linguist-language=TypeScript
 dist/**/*.ts linguist-language=TypeScript
 dist/**/*.mjs linguist-language=JavaScript
 dist/**/*.js linguist-language=JavaScript
-dist/ linguist-vendored=false
