@@ -96,4 +96,5 @@ export declare const compilePCREStyleRegExpLiteral: <
   const S extends string,
   const This = TypedRegExp<PCREStyleRegExpPattern<S>, PCREStyleRegExpFlags<S>>
 >(src: S) => This;
+export declare const compile: typeof compilePCREStyleRegExpLiteral;
 export {};
