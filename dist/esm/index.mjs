@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 */
-const NORMALIZE_PCRE_STYLE_REGEX = /(?<!\\)\#\s*.*$|\s+/gm;
+const NORMALIZE_PCRE_STYLE_REGEX = /(?<!\\)\#[^\r\n]*[\r\n]+?|\s+/g;
 export const normalizePCREStyleSource = (src) => {
     return src.replace(NORMALIZE_PCRE_STYLE_REGEX, "").replace(/\\#/g, "#");
 };
@@ -33,4 +33,4 @@ export const compilePCREStyleRegExpLiteral = (src) => {
     return new RegExp(pattern, flags);
 };
 export const compile = compilePCREStyleRegExpLiteral;
-export const version = "v0.6.10";
+export const version = "v0.6.11";

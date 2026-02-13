@@ -16,7 +16,7 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.version = exports.compile = exports.compilePCREStyleRegExpLiteral = exports.extractJsRegexPartsFromPCREStyleRegExpLiteral = exports.normalizePCREStyleSource = void 0;
-const NORMALIZE_PCRE_STYLE_REGEX = /(?<!\\)\#\s*.*$|\s+/gm;
+const NORMALIZE_PCRE_STYLE_REGEX = /(?<!\\)\#[^\r\n]*[\r\n]+?|\s+/g;
 const normalizePCREStyleSource = (src) => {
     return src.replace(NORMALIZE_PCRE_STYLE_REGEX, "").replace(/\\#/g, "#");
 };
@@ -39,4 +39,4 @@ const compilePCREStyleRegExpLiteral = (src) => {
 };
 exports.compilePCREStyleRegExpLiteral = compilePCREStyleRegExpLiteral;
 exports.compile = exports.compilePCREStyleRegExpLiteral;
-exports.version = "v0.6.10";
+exports.version = "v0.6.11";
